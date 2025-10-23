@@ -1,0 +1,366 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sistema de Inventario</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Formulario de Login (mejorado) -->
+    <div id="login-wrapper">
+        <div class="login-card" id="login-container">
+            <div class="brand"> 
+                <h2>ERP Canches</h2>
+                <p class="tagline">Gestión integral de inventario</p>
+            </div>
+
+            <div class="tabs" role="tablist">
+                <button id="tab-login" role="tab" aria-controls="panel-login" aria-selected="true" class="active">Iniciar sesión</button>
+                <button id="tab-register" role="tab" aria-controls="panel-register" aria-selected="false">Registrarse</button>
+            </div>
+
+            <div class="panels">
+                <div id="panel-login" role="tabpanel">
+                    <form id="login-form" class="form-card" novalidate>
+                        <label for="login-usuario" class="visually-hidden">Usuario</label>
+                        <input type="text" id="login-usuario" placeholder="Usuario" required>
+
+                        <label for="login-contraseña" class="visually-hidden">Contraseña</label>
+                        <input type="password" id="login-contraseña" placeholder="Contraseña" required>
+
+                        <div class="actions">
+                            <button type="submit" class="btn btn--primary">Entrar</button>
+                        </div>
+                        <div id="login-error" class="form-error" aria-live="polite"></div>
+                    </form>
+                </div>
+
+                <div id="panel-register" role="tabpanel" class="hidden">
+                    <form id="register-form" class="form-card" novalidate>
+                        <label for="register-usuario" class="visually-hidden">Usuario</label>
+                        <input type="text" id="register-usuario" placeholder="Usuario" required>
+
+                        <label for="register-contraseña" class="visually-hidden">Contraseña</label>
+                        <input type="password" id="register-contraseña" placeholder="Contraseña" required>
+
+                        <div class="actions">
+                            <button type="submit" class="btn btn--ghost">Registrar</button>
+                        </div>
+
+                        <div id="register-error" class="form-error" aria-live="polite"></div>
+                        <div id="register-success" class="form-success" aria-live="polite"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-content" style="display:none;">
+    <div class="content-wrapper">
+    <button id="btn-logout" class="btn btn--danger" style="float:right; margin:10px;">Salir</button>
+        <!-- ...todo el contenido actual de tu página... -->
+        <h1>ERP CanchesTechnology</h1>
+
+        <!-- Menú principal -->
+        <nav>
+            <button data-view="inventario" class="btn" onclick="mostrarVista('inventario')">Gestión de Inventario</button>
+            <button data-view="compras" class="btn" onclick="mostrarVista('compras')">Gestión de Compras</button>
+        </nav>
+
+        <!-- Vista Inventario -->
+        <section id="inventario" class="seccion">
+            <h2>Submódulos complementarios</h2>
+
+            <!-- Submenú -->
+            <div class="submenu">
+                <button class="btn btn--chip" onclick="mostrarSubSeccion('productos')">Productos</button>
+                <button class="btn btn--chip" onclick="mostrarSubSeccion('proveedores')">Proveedores</button>
+                <button class="btn btn--chip" onclick="mostrarSubSeccion('pedidos')">Pedidos</button>
+                <button class="btn btn--chip" onclick="mostrarSubSeccion('ubicaciones')">Ubicaciones</button>
+                <button class="btn btn--chip" onclick="mostrarSubSeccion('reportes')">Reportes</button>
+            </div>
+
+            <!-- Subapartados -->
+            <div id="subapartados-compras">
+
+                <!-- Productos -->
+                <section id="productos" class="subseccion">
+                    <h3>Productos</h3>
+                    <div id="alerta-reabastecimiento" style="display:none; color:red; font-weight:bold; margin:10px 0;"></div>
+                    <label>
+                        <input type="checkbox" id="filtro-bajo-stock" onchange="cargarProductos()">
+                        Mostrar solo productos bajo stock
+                    </label>
+
+                    <table id="tabla-productos">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Código Producto</th>
+                                <th>Nombre</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Costo</th>
+                                <th>Ganancia Unidad</th>
+                                <th>Ganancia Total</th>
+                                <th>Stock Mínimo</th>
+                                <th>Proveedor</th>
+                                <th>Ubicación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                    <h4>Gestión de Producto</h4>
+                    <form id="form-producto" onsubmit="agregarProducto(event)">
+                        <input type="hidden" id="productoId">
+                        <input type="text" id="CodigoProducto" placeholder="Código Producto" required>
+                        <input type="text" id="nombre" placeholder="Nombre" required>
+                        <input type="number" id="cantidad" placeholder="Cantidad" required>
+                        <input type="number" id="precio" placeholder="Precio" step="0.01" required>
+                        <input type="number" id="costo" placeholder="Costo" step="0.01" required>
+                        <input type="number" id="stockMinimo" placeholder="Stock Mínimo" required>
+                        <select id="proveedorId" required>
+                            <option value="">-- Selecciona Proveedor --</option>
+                        </select>
+                        <select id="ubicacionId" required>
+                            <option value="">-- Selecciona Ubicación --</option>
+                        </select>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-add">Agregar</button>
+                            <button type="button" class="btn btn-update" onclick="actualizarProducto()">Actualizar</button>
+                            <button type="button" class="btn btn-clear" onclick="limpiarFormulario('form-producto')">Limpiar Campos</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Proveedores -->
+                <section id="proveedores" class="subseccion hidden">
+                    <h3>Proveedores</h3>
+                    <table id="tabla-proveedores">
+                        <thead>
+                            <tr><th>ID</th><th>Nombre</th><th>Contacto</th><th>NIT</th><th>Email</th><th>Acciones</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                    <h4>Gestión de Proveedor</h4>
+                    <form id="form-proveedor" onsubmit="agregarProveedor(event)">
+                        <input type="hidden" id="proveedorId">
+                        <input type="text" id="prov-nombre" placeholder="Nombre" required>
+                        <input type="text" id="prov-contacto" placeholder="Contacto" required>
+                        <input type="text" id="prov-nit" placeholder="NIT">
+                        <input type="email" id="prov-email" placeholder="Email" required>
+                        <button type="submit" class="btn btn--primary">Agregar</button>
+                        <button type="button" class="btn btn--ghost" onclick="actualizarProveedor()">Actualizar</button>
+                        <button type="button" class="btn btn-ghost-small" onclick="limpiarFormulario('form-proveedor')">Limpiar Campos</button>
+                    </form>
+
+                    <h3>Proveedores Externos</h3>
+                    <table id="tabla-proveedores-externos" class="tabla">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Teléfono</th>
+                                <th>Email</th>
+                                <th>NIT</th>
+                                <th>Dirección</th>
+                                <th>Categoría</th>
+                                <th>Activo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </section>
+
+                <!-- Ubicaciones -->
+                <section id="ubicaciones" class="subseccion hidden">
+                    <h3>Ubicaciones</h3>
+                    <table id="tabla-ubicaciones">
+                        <thead>
+                            <tr><th>ID</th><th>Código</th><th>Descripción</th><th>Acciones</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                    <h4>Gestión de Ubicación</h4>
+                    <form id="form-ubicacion" onsubmit="agregarUbicacion(event)">
+                        <input type="hidden" id="ubicacionId">
+                        <input type="text" id="ubicacion-codigo" placeholder="Código" required>
+                        <input type="text" id="ubicacion-descripcion" placeholder="Descripción" required>
+                        <button type="submit" class="btn btn--primary">Guardar</button>
+                        <button type="button" class="btn btn--ghost" onclick="actualizarUbicacion()">Actualizar</button>
+                        <button type="button" class="btn btn-ghost-small" onclick="limpiarFormulario('form-ubicacion')">Limpiar Campos</button>
+                    </form>
+                    <p id="ubicacion-error" style="color:red;font-weight:bold;"></p>
+                </section>
+
+                <!-- Pedidos -->
+                <section id="pedidos" class="subseccion hidden">
+                    <h3>Pedidos</h3>
+                    <table id="tabla-pedidos">
+                        <thead>
+                            <tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Detalles</th><th>Acciones</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                    <h4>Gestión de Pedido</h4>
+                    <form id="form-pedido" onsubmit="agregarPedido(event)">
+                        <input type="hidden" id="pedidoId">
+                        <input type="text" id="pedido-cliente" placeholder="Cliente" required>
+
+                        <table id="tabla-detalles">
+                            <thead>
+                                <tr><th>Producto</th><th>Cantidad</th><th>Precio Unitario</th><th>Acciones</th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+
+                        <!-- Selector para agregar productos -->
+                        <div>
+                            <select id="detalle-productoId">
+                                <option value="">-- Selecciona Producto --</option>
+                            </select>
+                            <input type="number" id="detalle-cantidad" placeholder="Cantidad" required>
+                            <input type="text" id="detalle-precio" placeholder="Precio Unitario" readonly>
+                            <button type="button" class="btn btn--ghost" onclick="agregarDetalle()">Agregar Producto</button>
+                            <button type="button" class="btn btn-ghost-small" onclick="limpiarFormulario('form-pedido')">Limpiar Campos</button>
+                        </div>
+
+                        <button type="submit" class="btn btn--primary">Guardar Pedido</button>
+                        <button type="button" class="btn btn--ghost" onclick="actualizarPedido()">Actualizar</button>
+                    </form>
+                </section>
+
+                <!-- Reportes -->
+                <section id="reportes" class="subseccion hidden">
+
+                    <h2>📊 Reportes de Inventario</h2>
+                    <div id="reporte-resumen"></div>
+                    <button class="btn btn--primary" onclick="exportarExcelInventario()">📊 Exportar a Excel</button>
+                    <h3>⚠️ Productos con bajo stock</h3>
+                    <ul id="reporte-bajo-stock"></ul>
+                    <button class="btn btn--primary" onclick="exportarExcelStockBajo()">📉 Exportar Stock Bajo</button>
+
+                    <h3>Productos por Ubicación</h3>
+                    <div id="reporte-por-ubicacion"></div>
+
+                    <button class="btn btn--primary" onclick="exportarExcelPorUbicacion()">📊Exportar Excel por Ubicación</button>
+
+
+                    <h3>📈 Márgenes de Ganancia por Producto</h3>
+                    <table id="reporte-margenes">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Costo Unitario</th>
+                                <th>Precio Unitario</th>
+                                <th>Margen (%)</th>
+                                <th>Ganancia Total</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <button class="btn btn--primary" onclick="exportarExcelMargenes()">📊 Exportar Márgenes a Excel</button>
+
+
+                    <h3>📑 Histórico de Compras a Proveedores</h3>
+                    <div id="reporte-compras"></div>
+                    <button class="btn btn--primary" onclick="exportarExcelCompras()">📊 Exportar a Excel</button>
+
+
+                </section>
+            </div>
+        </section>
+
+
+        <!-- ================== VISTA GESTIÓN DE COMPRAS ================== -->
+        <section id="compras" class="seccion hidden">
+            <h2>Gestión de Compras</h2>
+
+            <div class="submenu">
+                <button class="btn btn--chip" onclick="mostrarSubSeccion('solicitudes')">Solicitudes de Compra</button>
+                <button class="btn btn--chip" onclick="mostrarSubSeccion('ordenes')">Órdenes de Compra</button>
+            </div>
+
+            <div id="subapartados-inventario">
+
+                <!-- Solicitudes de Compra -->
+                <section id="solicitudes" class="subseccion hidden">
+                    <h3>Solicitudes de Compra</h3>
+
+                    <table id="tabla-solicitudes">
+                        <thead>
+                            <tr><th>ID</th><th>Fecha</th><th>Estado</th><th>Cantidad</th><th>Acciones</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                    <h4>Nueva Solicitud</h4>
+                    <form id="form-solicitud" onsubmit="agregarSolicitud(event)">
+                        <input type="hidden" id="solicitudId">
+
+                        <select id="solicitud-proveedorId" onchange="filtrarProductosPorProveedorSolicitud()">
+                            <option value="">-- Selecciona Proveedor --</option>
+                        </select>
+
+                        <table id="tabla-detalles-solicitud">
+                            <thead>
+                                <tr><th>Producto</th><th>Cantidad</th><th>Costo</th><th>Acciones</th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+
+                        <div>
+                            <select id="solicitud-productoId">
+                                <option value="">-- Selecciona Producto --</option>
+                            </select>
+                            <input type="number" id="solicitud-cantidad" placeholder="Cantidad">
+                            <input type="number" id="solicitud-costo" placeholder="Costo Unitario" readonly>
+                            <button type="button" class="btn btn--ghost" onclick="agregarDetalleSolicitud()">Agregar Producto</button>
+                        </div>
+
+                        <button type="submit" class="btn btn--primary">Guardar Solicitud</button>
+                        <button type="button" class="btn btn--ghost" onclick="generarSolicitudAutomatica()">Generar Automática</button>
+                    </form>
+                </section>
+
+
+                <!-- Órdenes de Compra -->
+                <section id="ordenes" class="subseccion hidden">
+                    <h3>Órdenes de Compra</h3>
+
+                    <table id="tabla-ordenes">
+                        <thead>
+                            <tr><th>ID</th><th>Fecha</th><th>Proveedor</th><th>Estado</th><th>Detalles</th><th>Acciones</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </section>
+            </div>
+        </section>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/exceljs/dist/exceljs.min.js"></script>
+
+    <script src="app.js"></script>
+    <!-- Tab switching logic moved to app.js for centralized JS -->
+</body>
+</html>
+
+
+
+
+
+
+
+
+
