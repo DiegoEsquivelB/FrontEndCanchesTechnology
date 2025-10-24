@@ -94,26 +94,6 @@
                         Mostrar solo productos bajo stock
                     </label>
 
-                    <table id="tabla-productos">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Código Producto</th>
-                                <th>Nombre</th>
-                                <th>Cantidad</th>
-                                <th>Precio</th>
-                                <th>Costo</th>
-                                <th>Ganancia Unidad</th>
-                                <th>Ganancia Total</th>
-                                <th>Stock Mínimo</th>
-                                <th>Proveedor</th>
-                                <th>Ubicación</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-
                     <h4>Gestión de Producto</h4>
                     <form id="form-producto" onsubmit="agregarProducto(event)">
                         <input type="hidden" id="productoId">
@@ -135,17 +115,31 @@
                             <button type="button" class="btn btn-clear" onclick="limpiarFormulario('form-producto')">Limpiar Campos</button>
                         </div>
                     </form>
+
+                    <table id="tabla-productos">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Código Producto</th>
+                                <th>Nombre</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Costo</th>
+                                <th>Ganancia Unidad</th>
+                                <th>Ganancia Total</th>
+                                <th>Stock Mínimo</th>
+                                <th>Proveedor</th>
+                                <th>Ubicación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </section>
 
                 <!-- Proveedores -->
                 <section id="proveedores" class="subseccion hidden">
                     <h3>Proveedores</h3>
-                    <table id="tabla-proveedores">
-                        <thead>
-                            <tr><th>ID</th><th>Nombre</th><th>Contacto</th><th>NIT</th><th>Email</th><th>Acciones</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
 
                     <h4>Gestión de Proveedor</h4>
                     <form id="form-proveedor" onsubmit="agregarProveedor(event)">
@@ -158,6 +152,13 @@
                         <button type="button" class="btn btn--ghost" onclick="actualizarProveedor()">Actualizar</button>
                         <button type="button" class="btn btn-ghost-small" onclick="limpiarFormulario('form-proveedor')">Limpiar Campos</button>
                     </form>
+
+                    <table id="tabla-proveedores">
+                        <thead>
+                            <tr><th>ID</th><th>Nombre</th><th>Contacto</th><th>NIT</th><th>Email</th><th>Acciones</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
 
                     <h3>Proveedores Externos</h3>
                     <table id="tabla-proveedores-externos" class="tabla">
@@ -182,12 +183,6 @@
                 <!-- Ubicaciones -->
                 <section id="ubicaciones" class="subseccion hidden">
                     <h3>Ubicaciones</h3>
-                    <table id="tabla-ubicaciones">
-                        <thead>
-                            <tr><th>ID</th><th>Código</th><th>Descripción</th><th>Acciones</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
 
                     <h4>Gestión de Ubicación</h4>
                     <form id="form-ubicacion" onsubmit="agregarUbicacion(event)">
@@ -199,31 +194,25 @@
                         <button type="button" class="btn btn-ghost-small" onclick="limpiarFormulario('form-ubicacion')">Limpiar Campos</button>
                     </form>
                     <p id="ubicacion-error" style="color:red;font-weight:bold;"></p>
+
+                    <table id="tabla-ubicaciones">
+                        <thead>
+                            <tr><th>ID</th><th>Código</th><th>Descripción</th><th>Acciones</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </section>
 
                 <!-- Pedidos -->
                 <section id="pedidos" class="subseccion hidden">
                     <h3>Pedidos</h3>
-                    <table id="tabla-pedidos">
-                        <thead>
-                            <tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Detalles</th><th>Acciones</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
 
                     <h4>Gestión de Pedido</h4>
                     <form id="form-pedido" onsubmit="agregarPedido(event)">
                         <input type="hidden" id="pedidoId">
                         <input type="text" id="pedido-cliente" placeholder="Cliente" required>
 
-                        <table id="tabla-detalles">
-                            <thead>
-                                <tr><th>Producto</th><th>Cantidad</th><th>Precio Unitario</th><th>Acciones</th></tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-
-                        <!-- Selector para agregar productos -->
+                        <!-- Selector para agregar productos (inputs antes de la tabla de detalles) -->
                         <div>
                             <select id="detalle-productoId">
                                 <option value="">-- Selecciona Producto --</option>
@@ -234,9 +223,23 @@
                             <button type="button" class="btn btn-ghost-small" onclick="limpiarFormulario('form-pedido')">Limpiar Campos</button>
                         </div>
 
+                        <table id="tabla-detalles">
+                            <thead>
+                                <tr><th>Producto</th><th>Cantidad</th><th>Precio Unitario</th><th>Acciones</th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+
                         <button type="submit" class="btn btn--primary">Guardar Pedido</button>
                         <button type="button" class="btn btn--ghost" onclick="actualizarPedido()">Actualizar</button>
                     </form>
+
+                    <table id="tabla-pedidos">
+                        <thead>
+                            <tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Detalles</th><th>Acciones</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </section>
 
                 <!-- Reportes -->
@@ -296,13 +299,6 @@
                 <section id="solicitudes" class="subseccion hidden">
                     <h3>Solicitudes de Compra</h3>
 
-                    <table id="tabla-solicitudes">
-                        <thead>
-                            <tr><th>ID</th><th>Fecha</th><th>Estado</th><th>Cantidad</th><th>Acciones</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-
                     <h4>Nueva Solicitud</h4>
                     <form id="form-solicitud" onsubmit="agregarSolicitud(event)">
                         <input type="hidden" id="solicitudId">
@@ -310,13 +306,6 @@
                         <select id="solicitud-proveedorId" onchange="filtrarProductosPorProveedorSolicitud()">
                             <option value="">-- Selecciona Proveedor --</option>
                         </select>
-
-                        <table id="tabla-detalles-solicitud">
-                            <thead>
-                                <tr><th>Producto</th><th>Cantidad</th><th>Costo</th><th>Acciones</th></tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
 
                         <div>
                             <select id="solicitud-productoId">
@@ -327,9 +316,23 @@
                             <button type="button" class="btn btn--ghost" onclick="agregarDetalleSolicitud()">Agregar Producto</button>
                         </div>
 
+                        <table id="tabla-detalles-solicitud">
+                            <thead>
+                                <tr><th>Producto</th><th>Cantidad</th><th>Costo</th><th>Acciones</th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+
                         <button type="submit" class="btn btn--primary">Guardar Solicitud</button>
                         <button type="button" class="btn btn--ghost" onclick="generarSolicitudAutomatica()">Generar Automática</button>
                     </form>
+
+                    <table id="tabla-solicitudes">
+                        <thead>
+                            <tr><th>ID</th><th>Fecha</th><th>Estado</th><th>Cantidad</th><th>Acciones</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </section>
 
 

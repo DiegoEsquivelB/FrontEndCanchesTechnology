@@ -13,7 +13,7 @@ let detallesPedido = []; // módulo Ventas (pedidos de clientes)
 
 // ---- Gestión de Compras ----
 let solicitudes = [];
-let detallesSolicitud = [];
+let detallesSolicitud = []
 
 let ordenes = []; // Órdenes de compra (derivadas de solicitudes)
 let detallesOrden = []; // (ya no se usa para crear órdenes manuales, se deja por compatibilidad mínima)
