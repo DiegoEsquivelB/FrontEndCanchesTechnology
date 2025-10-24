@@ -1069,9 +1069,31 @@ async function exportarExcelPorUbicacion() {
     if (!ubicacionesMap[ubicacion]) ubicacionesMap[ubicacion] = [];
     ubicacionesMap[ubicacion].push(p);
   });
+  // Helper para sanear nombres de hoja (Excel limita 31 chars y prohíbe ciertos caracteres)
+  const usedSheetNames = new Set();
+  function makeSafeSheetName(name) {
+    let s = (name || '').toString();
+    // eliminar caracteres no permitidos \ / ? * : [ ] and control chars
+    s = s.replace(/[\\\/\?\*\:\[\]]/g, '');
+    s = s.replace(/[\x00-\x1F]/g, '');
+    s = s.trim();
+    if (!s) s = 'Ubicacion';
+    // truncar a 31 chars
+    let base = s.slice(0, 31);
+    let candidate = base;
+    let idx = 1;
+    while (usedSheetNames.has(candidate)) {
+      const suffix = `_${idx++}`;
+      const maxBase = 31 - suffix.length;
+      candidate = base.slice(0, maxBase) + suffix;
+    }
+    usedSheetNames.add(candidate);
+    return candidate;
+  }
 
   for (const ubicacion in ubicacionesMap) {
-    const sheet = workbook.addWorksheet(ubicacion.slice(0,31));
+    const safeName = makeSafeSheetName(ubicacion);
+    const sheet = workbook.addWorksheet(safeName);
     sheet.columns = [
       { header: 'ID', key: 'id', width: 5 },
       { header: 'Código Producto', key: 'codigoProducto', width: 18 },
